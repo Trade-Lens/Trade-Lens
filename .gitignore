@@ -1,0 +1,77 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual environment
+env/
+venv/
+ENV/
+.venv/
+.ENV/
+
+# Python virtual environment files
+*.venv
+*.env
+*.env.*
+
+# API keys and environment variables
+.env
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Pytest cache
+.pytest_cache/
+.cache
+
+# MyPy cache
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# Coverage reports
+htmlcov/
+*.cover
+*.coverage
+*.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.coveragerc
+*.codecov.yml
+
+# Deployment files
+*.spec
+
+# Testing output files
+*.log
+test-results/
+
+# Streamlit cache and logs
+.streamlit/
+
+# Data and logs
+logs/
+*.log
+*.csv
+*.h5
+*.sqlite3
+
+# Serialized model files
+*.pkl
+*.joblib
+*.pb
+
+# macOS system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+ehthumbs.db
