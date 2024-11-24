@@ -1,4 +1,5 @@
 import streamlit as st
+import yfinance as yf
 from components.sidebar import sidebar
 
 def main():
