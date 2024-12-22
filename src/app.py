@@ -4,7 +4,7 @@ from components.login_page import show_login_page
 from components.main_page import main_page
 
 def main():
-    st.set_page_config(page_title="Trade-Lens")
+    st.set_page_config(page_title="Trade-Lens", page_icon="📈")
     init_db()
 
     if "logged_in_user" not in st.session_state:
