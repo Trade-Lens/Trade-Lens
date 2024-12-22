@@ -3,10 +3,20 @@ from components.styles.sidebar_styles import sidebar_styles
 
 def sidebar():
     st.markdown(sidebar_styles(), unsafe_allow_html=True)
-    st.sidebar.title("Welcome to Trade Lens")
+    username = st.session_state["logged_in_user"]
+    st.sidebar.title(f"Welcome, {username}!")
 
-    col1, col2 = st.sidebar.columns([2,2])
+    # show the main page button
+    if st.sidebar.button("Search Stocks"):
+        st.session_state["page"] = "main"
+        st.rerun()
 
-    login_button = col1.button("Login")
-    register_button = col2.button("Register")
+    # show the portofolio button
+    if st.sidebar.button("Portofolio"):
+        st.session_state["page"] = "portofolio"
+        st.rerun()
 
+    # logout button
+    if st.sidebar.button("Logout"):
+        st.session_state["logged_in_user"] = None
+        st.rerun()

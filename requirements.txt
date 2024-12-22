@@ -2,6 +2,7 @@ altair==5.4.1
 appdirs==1.4.4
 apturl==0.5.2
 attrs==21.2.0
+Automat==24.8.1
 bcrypt==3.2.0
 beautifulsoup4==4.12.3
 beniget==0.4.1
@@ -17,6 +18,7 @@ charset-normalizer==3.4.0
 click==8.0.3
 colorama==0.4.4
 command-not-found==0.3
+constantly==23.10.4
 cryptography==3.4.8
 cupshelpers==1.0
 cycler==0.11.0
@@ -25,7 +27,7 @@ decorator==4.4.2
 defer==1.0.6
 defusedxml==0.7.1
 distro==1.7.0
-distro-info==1.1+ubuntu0.1
+distro-info==1.1+ubuntu0.2
 docker==5.0.3
 docker-compose==1.29.2
 dockerpty==0.4.1
@@ -43,8 +45,10 @@ GitPython==3.1.43
 gyp==0.1
 html5lib==1.1
 httplib2==0.20.2
+hyperlink==21.0.0
 idna==3.3
 importlib-metadata==4.6.4
+incremental==24.7.2
 influxdb==5.3.1
 iniconfig==2.0.0
 itsdangerous==2.2.0
@@ -75,15 +79,17 @@ msgpack==1.0.3
 multitasking==0.0.11
 narwhals==1.13.4
 netifaces==0.11.0
-numpy==1.21.5
+numpy==1.25.0
 oauthlib==3.2.0
 olefile==0.46
+opencv-python==4.7.0.72
 packaging==21.3
 pandas==2.0.3
 paramiko==2.9.3
+passlib==1.7.4
 peewee==3.17.8
 pexpect==4.8.0
-Pillow==9.0.1
+Pillow==10.0.1
 platformdirs==4.3.6
 pluggy==1.5.0
 ply==3.11
@@ -98,6 +104,7 @@ pycparser==2.22
 pycryptodomex==3.11.0
 pycups==2.0.1
 pydeck==0.9.1
+pygame==2.5.0
 Pygments==2.18.0
 PyGObject==3.42.1
 PyJWT==2.3.0
@@ -110,7 +117,7 @@ pysmi==0.3.2
 pysnmp==4.4.12
 pystache==0.6.0
 pytest==7.0.1
-python-apt==2.4.0+ubuntu2
+python-apt==2.4.0+ubuntu4
 python-dateutil==2.9.0.post0
 python-debian==0.1.43+ubuntu1.1
 python-dotenv==0.19.2
@@ -129,7 +136,7 @@ SecretStorage==3.3.1
 six==1.16.0
 smmap==5.0.1
 soupsieve==2.3.1
-streamlit==1.40.1
+streamlit==1.41.1
 sympy==1.9
 systemd-python==234
 tenacity==9.0.0
@@ -138,6 +145,7 @@ threadpoolctl==3.5.0
 toml==0.10.2
 tomli==2.0.2
 tornado==6.4.1
+Twisted==22.10.0
 typing_extensions==4.12.2
 tzdata==2024.1
 ubuntu-advantage-tools==8001
@@ -157,3 +165,4 @@ xdg==5
 xkit==0.0.0
 yfinance==0.2.50
 zipp==1.0.0
+zope.interface==7.2
