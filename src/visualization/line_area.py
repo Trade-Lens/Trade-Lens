@@ -2,7 +2,7 @@ import streamlit as st
 import yfinance as yf
 from streamlit_echarts import st_echarts
 
-def display_line_chart(stock_query: str, period: str = "1mo"):
+def display_line_area(stock_query: str, period: str = "1mo"):
     stock_query = stock_query.strip()
     ticker_data = yf.Ticker(stock_query)
     data = ticker_data.history(period=period)
@@ -42,9 +42,10 @@ def display_line_chart(stock_query: str, period: str = "1mo"):
             {
                 "data": y_data,
                 "type": "line",
-                "smooth": True,
+                "smooth": False,
                 "showSymbol": False,
                 "name": "Price:",
+                "areaStyle": {}
             }
         ],
         "grid": {
@@ -55,4 +56,4 @@ def display_line_chart(stock_query: str, period: str = "1mo"):
         }
     }
 
-    st_echarts(options=options, height="400px", key="echarts_line")
+    st_echarts(options=options, height="400px", key="echarts_line_area")
