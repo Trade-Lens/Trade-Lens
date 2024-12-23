@@ -6,6 +6,9 @@ def sidebar():
     username = st.session_state["logged_in_user"]
     st.sidebar.title(f"Welcome, {username}!")
 
+    if "page" not in st.session_state:
+        st.session_state["page"] = "main"
+
     # show the main page button
     if st.sidebar.button("Search Stocks"):
         st.session_state["page"] = "main"

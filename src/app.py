@@ -9,6 +9,8 @@ def main():
 
     if "logged_in_user" not in st.session_state:
         st.session_state["logged_in_user"] = None
+    if "page" not in st.session_state:
+        st.session_state["page"] = "main"
 
     # prima data cand intram in aplicatie se va afisa pagina de login
     if st.session_state["logged_in_user"] is None:

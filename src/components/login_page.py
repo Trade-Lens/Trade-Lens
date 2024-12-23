@@ -26,7 +26,6 @@ def show_login_page():
                 if login_user(login_username, login_password):
                     st.success("Login successful!")
                     st.session_state["logged_in_user"] = login_username
-                    st.session_state["page"] = "main"
                     st.rerun()
                 else:
                     st.error("Invalid credentials.")

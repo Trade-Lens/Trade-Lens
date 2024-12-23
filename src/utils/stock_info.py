@@ -1,7 +1,7 @@
 import streamlit as st
 import yfinance as yf
 
-def display_stock_info(stock_query: str) -> str:
+def display_stock_info(stock_query: str):
     stock_query = stock_query.strip()
     ticker_data = yf.Ticker(stock_query)
     info = ticker_data.info
@@ -9,28 +9,46 @@ def display_stock_info(stock_query: str) -> str:
     col1, col2 = st.columns(2)
 
     with col1:
-        # numele companiei
-        st.header(info["longName"])
+        with st.form(key="add_to_portfolio"):
+            # numele companiei
+            st.header(info["longName"])
 
-        st.write("")
-        st.markdown(f"<span style='color:#f7df1e'>Located in: </span> {info['city']}, {info['country']}"if "city" in info and "country" in info else "N/A", unsafe_allow_html=True)
-        st.markdown(f"<span style='color:#f7df1e'>Contact phone: </span> {info['phone']}" if "phone" in info else "N/A", unsafe_allow_html=True)
-        st.markdown(f"<span style='color:#f7df1e'>Sector: </span> {info['sector']}" if "sector" in info else "N/A", unsafe_allow_html=True)
-        st.markdown(f"<span style='color:#f7df1e'>Industry: </span> {info['industry']}" if "industry" in info else "N/A", unsafe_allow_html=True)
-        st.markdown(f"<span style='color:#f7df1e'>Website: </span> <a href='{info['website']}'>{info['website']}</a>" if "website" in info else "N/A", unsafe_allow_html=True)
+            st.write("")
+            st.markdown(f"<span style='color:#ff4b4b'>Located in: </span> {info.get('city', 'N/A')}, {info.get('country', 'N/A')}", unsafe_allow_html=True)
+            st.markdown(f"<span style='color:#ff4b4b'>Contact phone: </span> {info.get('phone', 'N/A')}", unsafe_allow_html=True)
+            st.markdown(f"<span style='color:#ff4b4b'>Sector: </span> {info.get('sector', 'N/A')}", unsafe_allow_html=True)
+            st.markdown(f"<span style='color:#ff4b4b'>Industry: </span> {info.get('industry', 'N/A')}", unsafe_allow_html=True)
+            
+            st.write("")
+            st.write("")
+            col3, col4 , col5 = st.columns(3)
+
+            with col3:
+                st.link_button("Company Website", info["website"] if "website" in info else "#", use_container_width=True)
+            
+            with col4:
+                shareNo = st.number_input("Shares", min_value=1, key="shareNo" , label_visibility="collapsed")
+    
+            with col5:
+                if st.form_submit_button("Add to Portfolio" , use_container_width=True):
+                    st.session_state["added_stock"] = stock_query
+                    st.session_state["added_shares"] = shareNo
+
+            
     with col2:
         # tabel cu informatii
         st.table({
-            "Market Cap": info["marketCap"] if "marketCap" in info else "N/A",
-            "Total Revenue": info["totalRevenue"] if "totalRevenue" in info else "N/A",
-            "EBITDA": info["ebitda"] if "ebitda" in info else "N/A",
-            "PE Ratio": info["trailingPE"] if "trailingPE" in info else "N/A",
-            "EPS": info["trailingEps"] if "trailingEps" in info else "N/A",
-            "Dividend Yield": info["dividendYield"] if "dividendYield" in info else "N/A",
-            "Revenue Growth": info["revenueGrowth"] if "revenueGrowth" in info else "N/A",
-            "Return on Assets": info["returnOnAssets"] if "returnOnAssets" in info else "N/A",
+            "Market Cap": info.get("marketCap", "N/A"),
+            "Total Revenue": info.get("totalRevenue", "N/A"),
+            "EBITDA": info.get("ebitda", "N/A"),
+            "PE Ratio": info.get("trailingPE", "N/A"),
+            "PEG Ratio": info.get("pegRatio", "N/A"),
+            "EPS": info.get("trailingEps", "N/A"),
+            "Dividend Yield": info.get("dividendYield", "N/A"),
+            "Revenue Growth": info.get("revenueGrowth", "N/A"),
+            "Return on Assets": info.get("returnOnAssets", "N/A"),
+            "Return on Equity": info.get("returnOnEquity", "N/A"),
         })
 
-        if st.button("Add to Portfolio"):
-            return info["symbol"]
+        
     

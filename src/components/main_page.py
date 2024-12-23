@@ -21,32 +21,36 @@ def main_page():
             )
 
         with col2:
-            period_options = ["1d", "5d", "1wk", "1mo", "3mo", "6mo", "1y", "max"]
+            period_options = ["1d", "5d", "1mo", "3mo", "6mo", "1y", "max"]
             selected_period = st.selectbox(
                 label = "Select Period (invisible)",
                 label_visibility = "collapsed",
                 options = period_options,
-                index = 3 # default o luna
+                index = 3 # default 3 luni
             )
 
         with col3:
             search_button = st.button("Search", key="search_button")
 
         if search_button and stock_query.strip():
-            # display_line_chart(stock_query, period=selected_period)
             display_line_area(stock_query, period=selected_period)
-
-            add_stock = None
-            add_stock = display_stock_info(stock_query)
-
-            if add_stock:
-                st.success(f"Successfully added {add_stock} to your portfolio.")
+            display_stock_info(stock_query)
 
         elif search_button and not stock_query.strip():
             st.warning("Please enter a stock symbol before searching.")
-
+    
     elif st.session_state.page == "portofolio":
         st.title("My Portofolio")
+
+        stock = st.session_state["added_stock"]
+        shares = st.session_state["added_shares"]
+
+        if stock is not None and shares is not None:
+            st.write(f"Successfully added {shares} of {stock} to your portfolio.")
+            st.session_state["added_stock"] = None
+            st.session_state["added_shares"] = None
+        else:
+            st.write("BUG BUG BUG")
 
         # demo data
         table_data = {
