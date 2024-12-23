@@ -43,13 +43,13 @@ def display_line_chart(stock_query: str, period: str = "1mo"):
                 "data": y_data,
                 "type": "line",
                 "smooth": True,
-                "showSymbol": True,
+                "showSymbol": False,
                 "name": "Price:",
             }
         ],
         "grid": {
             "left": "5%",
-            "right": "0%",
+            "right": "5%",
             "top": 60,
             "bottom": 60
         }

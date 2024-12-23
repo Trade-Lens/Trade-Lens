@@ -11,6 +11,10 @@ def landing_page_styles():
         margin-top: 50px;
     }
 
+    .stImage {
+        margin-left: 150px;
+    }
+
     </style>
 
     """
