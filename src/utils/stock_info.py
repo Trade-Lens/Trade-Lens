@@ -30,9 +30,11 @@ def display_stock_info(stock_query: str):
                 shareNo = st.number_input("Shares", min_value=1, key="shareNo" , label_visibility="collapsed")
     
             with col5:
-                if st.form_submit_button("Add to Portfolio" , use_container_width=True):
+                submit_button = st.form_submit_button("Add to Portfolio", use_container_width=True)
+                if submit_button:
                     st.session_state["added_stock"] = stock_query
                     st.session_state["added_shares"] = shareNo
+                    st.success(f"Successfully added {shareNo} of {stock_query.upper()} to your portfolio.")
 
             
     with col2:

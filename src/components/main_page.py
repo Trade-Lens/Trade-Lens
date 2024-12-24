@@ -1,17 +1,20 @@
 import streamlit as st
 from components.sidebar import sidebar
-from visualization.line_chart import display_line_chart
 from visualization.line_area import display_line_area
 from utils.stock_info import display_stock_info
 
 def main_page():
     sidebar()
 
+    if "viewed_stock" not in st.session_state:
+        st.session_state["viewed_stock"] = None
+
     if st.session_state.page == "main":
         st.title("Search for a specific stock:")
         st.write("")
 
-        col1, col2 , col3 = st.columns([3, 1 , 1])
+        col1, col2, col3 = st.columns([3, 1, 1])
+
         with col1:
             stock_query = st.text_input(
                 label = "Stock Symbol (invisible)",
@@ -33,28 +36,37 @@ def main_page():
             search_button = st.button("Search", key="search_button")
 
         if search_button and stock_query.strip():
-            display_line_area(stock_query, period=selected_period)
-            display_stock_info(stock_query)
+            st.session_state["viewed_stock"] = stock_query.strip()
+            st.session_state["viewed_period"] = selected_period
 
         elif search_button and not stock_query.strip():
             st.warning("Please enter a stock symbol before searching.")
-    
-    elif st.session_state.page == "portofolio":
-        st.title("My Portofolio")
 
+        if st.session_state["viewed_stock"] is not None:
+            display_line_area(st.session_state["viewed_stock"], 
+                              period=st.session_state.get("viewed_period", "1mo"))
+            display_stock_info(st.session_state["viewed_stock"])
+
+    elif st.session_state.page == "portofolio":
+        st.title("My Portfolio")
+
+        # Ensure these exist
         if "added_stock" not in st.session_state:
             st.session_state["added_stock"] = None
         if "added_shares" not in st.session_state:
             st.session_state["added_shares"] = None
+
         stock = st.session_state["added_stock"]
         shares = st.session_state["added_shares"]
 
         if stock is not None and shares is not None:
-            st.write(f"Successfully added {shares} of {stock} to your portfolio.")
+            st.write(f"Successfully added {shares} of {stock.upper()} to your portfolio.")
+            
+            # resetam session state pentru stock si shares
             st.session_state["added_stock"] = None
             st.session_state["added_shares"] = None
         else:
-            st.write("BUG BUG BUG")
+            st.write("No newly added stock right now.")
 
         # demo data
         table_data = {
