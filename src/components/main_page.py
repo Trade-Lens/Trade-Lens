@@ -42,6 +42,10 @@ def main_page():
     elif st.session_state.page == "portofolio":
         st.title("My Portofolio")
 
+        if "added_stock" not in st.session_state:
+            st.session_state["added_stock"] = None
+        if "added_shares" not in st.session_state:
+            st.session_state["added_shares"] = None
         stock = st.session_state["added_stock"]
         shares = st.session_state["added_shares"]
 
