@@ -9,6 +9,7 @@ def display_line_area(stock_query: str, period: str = "1mo"):
 
     if data.empty:
         st.error(f"Nu exista date.")
+        st.stop()
         return
 
     df = data.reset_index()
@@ -45,11 +46,14 @@ def display_line_area(stock_query: str, period: str = "1mo"):
                 "smooth": False,
                 "showSymbol": False,
                 "name": "Price:",
-                "areaStyle": {}
+                "areaStyle": {},
+                "itemStyle": {
+                    "color": "#ff4b4b"
+                }
             }
         ],
         "grid": {
-            "left": "0%",
+            "left": "2%",
             "right": "0%",
             "top": 30,
             "bottom": 30

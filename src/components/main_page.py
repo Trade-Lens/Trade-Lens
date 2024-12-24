@@ -1,4 +1,6 @@
 import streamlit as st
+import time
+import pandas as pd
 from components.sidebar import sidebar
 from visualization.line_area import display_line_area
 from utils.stock_info import display_stock_info
@@ -49,6 +51,7 @@ def main_page():
 
     elif st.session_state.page == "portofolio":
         st.title("My Portfolio")
+        st.write("")
 
         # Ensure these exist
         if "added_stock" not in st.session_state:
@@ -59,21 +62,64 @@ def main_page():
         stock = st.session_state["added_stock"]
         shares = st.session_state["added_shares"]
 
-        if stock is not None and shares is not None:
-            st.write(f"Successfully added {shares} of {stock.upper()} to your portfolio.")
+        col4, col5 = st.columns([5, 1])
+
+        with col4:
+            # demo manipulare date in tabelul de potofoliu (de implementat cu sql)
+            if "portfolio_data" not in st.session_state:
+                table_data = pd.DataFrame({
+                    "Stock Symbol": [],
+                    "Shares": [],
+                    "Price": [],
+                    "Total Value": []
+                })
+            else:
+                table_data = st.session_state["portfolio_data"]
             
-            # resetam session state pentru stock si shares
-            st.session_state["added_stock"] = None
-            st.session_state["added_shares"] = None
-        else:
-            st.write("No newly added stock right now.")
+            if stock is not None and shares is not None:
+                if stock in table_data["Stock Symbol"].values:
+                    # gasim indexul randului cu stock-ul respectiv
+                    idx = table_data.index[table_data["Stock Symbol"] == stock].tolist()[0]
 
-        # demo data
-        table_data = {
-            "Stock Symbol": ["AAPL", "GOOGL", "AMZN"],
-            "Shares": [10, 5, 15],
-            "Price": [150.0, 2500.0, 3500.0],
-            "Total Value": [1500.0, 12500.0, 52500.0]
-        }
+                    # adunam actiunile noi si updatam valoarea totala
+                    table_data.at[idx, "Shares"] += shares
+                    table_data.at[idx, "Total Value"] = table_data.at[idx, "Shares"] * table_data.at[idx, "Price"]
+                else:
+                    new_row = {
+                        "Stock Symbol": stock,
+                        "Shares": shares,
+                        "Price": st.session_state["added_stock_info"]["previousClose"],
+                        "Total Value": shares * st.session_state["added_stock_info"]["previousClose"]
+                    }
+                    table_data = pd.concat([table_data, pd.DataFrame([new_row])], ignore_index=True)
 
-        st.table(table_data)
+                st.session_state["added_stock"] = None
+                st.session_state["added_shares"] = None
+                st.session_state["added_stock_info"] = None
+
+            st.session_state["portfolio_data"] = table_data
+            editable_table = st.data_editor(st.session_state["portfolio_data"], use_container_width=True)
+
+        with col5:
+            # dropdown cu optiuni de stergere a unui stock din portofoliu
+            dropdown_options = table_data["Stock Symbol"].tolist()
+
+            with st.form(key="delete_stock"):
+                selected_stock = st.selectbox(
+                    label = "Select Stock to Delete",
+                    options = dropdown_options,
+                    key = "selected_stock"
+                )
+                delete_button = st.form_submit_button("Delete Stock", use_container_width=True)
+
+            if delete_button:
+                table_data = table_data[table_data["Stock Symbol"] != selected_stock]
+                st.session_state["portfolio_data"] = table_data
+                st.rerun()
+            
+            cont = st.container(border=True)
+
+            cont.write("Total Portfolio Value: " + str(table_data["Total Value"].sum().round(2)) + " $")
+        
+
+

@@ -27,15 +27,15 @@ def display_stock_info(stock_query: str):
                 st.link_button("Company Website", info["website"] if "website" in info else "#", use_container_width=True)
             
             with col4:
-                shareNo = st.number_input("Shares", min_value=1, key="shareNo" , label_visibility="collapsed")
+                shareNo = st.number_input("Shares", min_value=1.0, key="shareNo", label_visibility="collapsed", step=1.0)
     
             with col5:
                 submit_button = st.form_submit_button("Add to Portfolio", use_container_width=True)
                 if submit_button:
-                    st.session_state["added_stock"] = stock_query
+                    st.session_state["added_stock"] = info["symbol"]
                     st.session_state["added_shares"] = shareNo
-                    st.success(f"Successfully added {shareNo} of {stock_query.upper()} to your portfolio.")
-
+                    st.session_state["added_stock_info"] = info
+                    st.toast(f"Successfully added {shareNo} of {stock_query.upper()} to your portfolio.", icon='🎉')
             
     with col2:
         # tabel cu informatii
@@ -51,6 +51,9 @@ def display_stock_info(stock_query: str):
             "Return on Assets": info.get("returnOnAssets", "N/A"),
             "Return on Equity": info.get("returnOnEquity", "N/A"),
         })
+
+    with st.expander("Company description", expanded=False):
+        st.write(info.get("longBusinessSummary", "N/A"))
 
         
     
