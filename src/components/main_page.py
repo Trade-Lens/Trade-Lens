@@ -4,6 +4,8 @@ import pandas as pd
 from components.sidebar import sidebar
 from visualization.line_area import display_line_area
 from utils.stock_info import display_stock_info
+from api.news_data import get_news
+from api.stock_insider_sentiment import get_insider_sentiment
 
 def main_page():
     sidebar()
@@ -35,7 +37,7 @@ def main_page():
             )
 
         with col3:
-            search_button = st.button("Search", key="search_button")
+            search_button = st.button("Search", key="search_button", use_container_width=True)
 
         if search_button and stock_query.strip():
             st.session_state["viewed_stock"] = stock_query.strip()
@@ -48,6 +50,8 @@ def main_page():
             display_line_area(st.session_state["viewed_stock"], 
                               period=st.session_state.get("viewed_period", "1mo"))
             display_stock_info(st.session_state["viewed_stock"])
+
+            # insider_sentiment = get_insider_sentiment(st.session_state["viewed_stock"])
 
     elif st.session_state.page == "portofolio":
         st.title("My Portfolio")
@@ -62,7 +66,7 @@ def main_page():
         stock = st.session_state["added_stock"]
         shares = st.session_state["added_shares"]
 
-        col4, col5 = st.columns([5, 1])
+        col4, col5 = st.columns([5, 1.2])
 
         with col4:
             # demo manipulare date in tabelul de potofoliu (de implementat cu sql)
@@ -121,5 +125,25 @@ def main_page():
 
             cont.write("Total Portfolio Value: " + str(table_data["Total Value"].sum().round(2)) + " $")
         
+    elif st.session_state.page == "market_news":
+        st.title("Market News")
+        st.write("")
 
+        news = get_news()
 
+        col1, col2 = st.columns(2)
+        for i, article in enumerate(news[:30]):
+            if i % 2 == 0:
+                with col1:
+                    news_container = st.container(border=True)
+                    news_container.image(article["image"], use_container_width=True)
+                    news_container.subheader(f"**{article['headline']}**")
+                    news_container.write(article["summary"])
+                    news_container.link_button("Read more", article["url"])
+            else:
+                with col2:
+                    news_container = st.container(border=True)
+                    news_container.image(article["image"], use_container_width=True)
+                    news_container.subheader(f"**{article['headline']}**")
+                    news_container.write(article["summary"])
+                    news_container.link_button("Read more", article["url"])
