@@ -1,5 +1,6 @@
 import streamlit as st
 from components.styles.sidebar_styles import sidebar_styles
+import pandas as pd
 
 def sidebar():
     username = st.session_state["logged_in_user"]
@@ -26,4 +27,17 @@ def sidebar():
     # logout button
     if st.sidebar.button("Logout", use_container_width=True, type="primary"):
         st.session_state["logged_in_user"] = None
+        st.session_state["viewed_stock"] = None
+        st.session_state["viewed_period"] = None
+        st.session_state["added_stock"] = None
+        st.session_state["added_shares"] = None
+        st.session_state["added_stock_info"] = None
+
+        table_data = pd.DataFrame({
+                    "Stock Symbol": [],
+                    "Shares": [],
+                    "Price": [],
+                    "Total Value": []
+        })
+        st.session_state["portfolio_data"] = table_data
         st.rerun()
