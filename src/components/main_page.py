@@ -3,9 +3,11 @@ import time
 import pandas as pd
 from components.sidebar import sidebar
 from visualization.line_area import display_line_area
+from visualization.stacked_bar import display_stacked_bar
 from utils.stock_info import display_stock_info
 from api.news_data import get_news
 from api.stock_insider_sentiment import get_insider_sentiment
+from api.analyst_recommendation import get_analyst_recommendation
 
 def main_page():
     sidebar()
@@ -50,8 +52,38 @@ def main_page():
             display_line_area(st.session_state["viewed_stock"], 
                               period=st.session_state.get("viewed_period", "1mo"))
             display_stock_info(st.session_state["viewed_stock"])
+            
+            st.write("")
 
-            # insider_sentiment = get_insider_sentiment(st.session_state["viewed_stock"])
+            col1, col2 = st.columns([1.5, 1])
+            with col1:
+                # Recomandari analisti
+                st.subheader("Analyst Recommendations")
+                st.write("")
+
+                display_stacked_bar(st.session_state["viewed_stock"])
+
+            with col2:
+                # Sentiment insideri
+                st.subheader("Stock Growth Prediction")
+                st.write("")
+                st.write("Using our machine learning algorithms we can estimate a growth prediction based on financial strength, market sentiment, historical data, insider sentiment and other factors.")
+                st.write("")
+
+                # de implementat algoritmul de predictie cu ml 
+
+                # demo vizual(datele sunt random)
+                col3, col4= st.columns(2)
+
+                with col3:
+                    st.metric(label="90 days", value="+5%", delta="2%", border=True)
+                    st.metric(label="365 days", value="+15%", delta="4%", border=True)
+
+                with col4:
+                    st.metric(label="180 days", value="+10%", delta="3%", border=True)
+                    st.metric(label="730 days", value="+20%", delta="5%", border=True)
+
+                st.error("These predictions can be misleading sometimes and should not be considered financial advice.")
 
     elif st.session_state.page == "portofolio":
         st.title("My Portfolio")
