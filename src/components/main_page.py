@@ -1,6 +1,7 @@
 import streamlit as st
 import time
 import pandas as pd
+import yfinance as yf
 from components.sidebar import sidebar
 from visualization.line_area import display_line_area
 from visualization.stacked_bar import display_stacked_bar
@@ -73,6 +74,10 @@ def main_page():
                 # de implementat algoritmul de predictie cu ml 
 
                 # demo vizual(datele sunt random)
+                yf_buy = yf.Ticker(st.session_state["viewed_stock"]).info["recommendationKey"]
+                yf_delta = 1 if yf_buy == "buy" else -1
+                yf_delta = 0 if yf_buy == "hold" else yf_delta
+
                 col3, col4= st.columns(2)
 
                 with col3:
@@ -81,7 +86,7 @@ def main_page():
 
                 with col4:
                     st.metric(label="180 days", value="+10%", delta="3%", border=True)
-                    st.metric(label="730 days", value="+20%", delta="5%", border=True)
+                    st.metric(label="YFINANCE RECOMMENDATION", value=yf_buy, delta=yf_delta, border=True)
 
                 st.error("These predictions can be misleading sometimes and should not be considered financial advice.")
 
