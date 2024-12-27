@@ -6,6 +6,7 @@ from components.sidebar import sidebar
 from visualization.line_area import display_line_area
 from visualization.stacked_bar import display_stacked_bar
 from utils.stock_info import display_stock_info
+from utils.yfinance_rec import get_recommendations
 from api.news_data import get_news
 from api.stock_insider_sentiment import get_insider_sentiment
 from api.analyst_recommendation import get_analyst_recommendation
@@ -73,11 +74,10 @@ def main_page():
 
                 # de implementat algoritmul de predictie cu ml 
 
-                # demo vizual(datele sunt random)
-                yf_buy = yf.Ticker(st.session_state["viewed_stock"]).info["recommendationKey"]
-                yf_delta = 1 if yf_buy == "buy" else -1
-                yf_delta = 0 if yf_buy == "hold" else yf_delta
+                # recomandare yfinance
+                yf_buy, yf_delta = get_recommendations(st.session_state["viewed_stock"])
 
+                # demo vizual(datele sunt random)
                 col3, col4= st.columns(2)
 
                 with col3:
