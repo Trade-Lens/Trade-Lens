@@ -10,6 +10,9 @@ from utils.yfinance_rec import get_recommendations
 from api.news_data import get_news
 from api.stock_insider_sentiment import get_insider_sentiment
 from api.analyst_recommendation import get_analyst_recommendation
+from utils.portofolio import get_user_portofolio
+from auth.auth_service import get_user_id
+from utils.portofolio import delete_stock_from_portfolio
 
 def main_page():
     sidebar()
@@ -94,56 +97,34 @@ def main_page():
         st.title("My Portfolio")
         st.write("")
 
-        # Ensure these exist
-        if "added_stock" not in st.session_state:
-            st.session_state["added_stock"] = None
-        if "added_shares" not in st.session_state:
-            st.session_state["added_shares"] = None
+        username = st.session_state["logged_in_user"]
+        user_id = get_user_id(username)
+        user_portfolio = get_user_portofolio(user_id)
+ 
+        # tabel cu portofoliul userului
+        user_portfolio_df = pd.DataFrame(list(user_portfolio.items()), columns=["Stock Symbol", "Shares"])
+        
+        if user_portfolio_df.empty:
+            st.write("Your portfolio is empty.")
+            return
 
-        stock = st.session_state["added_stock"]
-        shares = st.session_state["added_shares"]
+        for i, row in user_portfolio_df.iterrows():
+            ticker_data = yf.Ticker(row["Stock Symbol"])
+            info = ticker_data.info
+            user_portfolio_df.at[i, "Price"] = info["previousClose"]
+            user_portfolio_df.at[i, "Total Value"] = info["previousClose"] * float(list(row["Shares"])[0])
+        
+
 
         col4, col5 = st.columns([5, 1.2])
 
         with col4:
-            # demo manipulare date in tabelul de potofoliu (de implementat cu sql)
-            if "portfolio_data" not in st.session_state:
-                table_data = pd.DataFrame({
-                    "Stock Symbol": [],
-                    "Shares": [],
-                    "Price": [],
-                    "Total Value": []
-                })
-            else:
-                table_data = st.session_state["portfolio_data"]
-            
-            if stock is not None and shares is not None:
-                if stock in table_data["Stock Symbol"].values:
-                    # gasim indexul randului cu stock-ul respectiv
-                    idx = table_data.index[table_data["Stock Symbol"] == stock].tolist()[0]
 
-                    # adunam actiunile noi si updatam valoarea totala
-                    table_data.at[idx, "Shares"] += shares
-                    table_data.at[idx, "Total Value"] = table_data.at[idx, "Shares"] * table_data.at[idx, "Price"]
-                else:
-                    new_row = {
-                        "Stock Symbol": stock,
-                        "Shares": shares,
-                        "Price": st.session_state["added_stock_info"]["previousClose"],
-                        "Total Value": shares * st.session_state["added_stock_info"]["previousClose"]
-                    }
-                    table_data = pd.concat([table_data, pd.DataFrame([new_row])], ignore_index=True)
-
-                st.session_state["added_stock"] = None
-                st.session_state["added_shares"] = None
-                st.session_state["added_stock_info"] = None
-
-            st.session_state["portfolio_data"] = table_data
-            editable_table = st.data_editor(st.session_state["portfolio_data"], use_container_width=True)
+            st.dataframe(user_portfolio_df, use_container_width=True)
 
         with col5:
             # dropdown cu optiuni de stergere a unui stock din portofoliu
-            dropdown_options = table_data["Stock Symbol"].tolist()
+            dropdown_options = user_portfolio_df["Stock Symbol"].tolist()
 
             with st.form(key="delete_stock"):
                 selected_stock = st.selectbox(
@@ -154,13 +135,12 @@ def main_page():
                 delete_button = st.form_submit_button("Delete Stock", use_container_width=True)
 
             if delete_button:
-                table_data = table_data[table_data["Stock Symbol"] != selected_stock]
-                st.session_state["portfolio_data"] = table_data
+                delete_stock_from_portfolio(user_id, selected_stock)
                 st.rerun()
             
+            # afisam valoarea totala a portofoliului
             cont = st.container(border=True)
-
-            cont.write("Total Portfolio Value: " + str(table_data["Total Value"].sum().round(2)) + " $")
+            cont.write("Total Portfolio Value: " + str(user_portfolio_df["Total Value"].sum().round(2)) + " $")
         
     elif st.session_state.page == "market_news":
         st.title("Market News")

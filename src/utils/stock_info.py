@@ -1,5 +1,7 @@
 import streamlit as st
 import yfinance as yf
+from utils.portofolio import get_user_portofolio, add_stock_to_portfolio
+from auth.auth_service import get_user_id
 
 def display_stock_info(stock_query: str):
     stock_query = stock_query.strip()
@@ -35,6 +37,8 @@ def display_stock_info(stock_query: str):
                     st.session_state["added_stock"] = info["symbol"]
                     st.session_state["added_shares"] = shareNo
                     st.session_state["added_stock_info"] = info
+                    user_id = get_user_id(st.session_state["logged_in_user"])
+                    add_stock_to_portfolio(user_id, info["symbol"], shareNo)
                     st.toast(f"Successfully added {shareNo} of {stock_query.upper()} to your portfolio.", icon='🎉')
             
     with col2:

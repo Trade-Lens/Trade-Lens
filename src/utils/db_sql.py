@@ -3,7 +3,7 @@ import sqlite3
 import os
 
 #  in development fiecare isi schimba path-ul catre baza de date
-DB_PATH = "/home/calin/Desktop/Trade-Lens/src/utils/trade_lens.db"
+DB_PATH = "/home/alin/Desktop/Trade-Lens/src/utils/trade_lens.db"
 
 def get_connection():
     conn = sqlite3.connect(DB_PATH)
@@ -32,7 +32,7 @@ def init_db():
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
                 stock_symbol TEXT NOT NULL,
-                quantity REAL NOT NULL,
+                shares REAL NOT NULL,
                 FOREIGN KEY(user_id) REFERENCES users(id)
             );
             """
