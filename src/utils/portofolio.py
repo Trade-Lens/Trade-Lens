@@ -46,11 +46,23 @@ def add_stock_to_portfolio(user_id: int, stock_symbol: str, quantity: float):
         conn.close()
 
 # functie care sterge un stock din portofoliu
-def delete_stock_from_portfolio(user_id: int, stock_symbol: str):
+def delete_stock_from_portfolio(user_id: int, stock_symbol: str, quantity: float):
     conn = get_connection()
     try:
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM portfolios WHERE user_id = ? AND stock_symbol = ?", (user_id, stock_symbol))
+
+        cursor.execute("SELECT shares FROM portfolios WHERE user_id = ? AND stock_symbol = ?", (user_id, stock_symbol))
+        result = cursor.fetchone()
+
+        # stergem stock-ul din portofoliu daca numarul de actiuni devine 0
+        if result:
+            new_shares = result["shares"] - quantity
+            if new_shares > 0:
+                cursor.execute("UPDATE portfolios SET shares = ? WHERE user_id = ? AND stock_symbol = ?", 
+                               (new_shares, user_id, stock_symbol))
+            else:
+                cursor.execute("DELETE FROM portfolios WHERE user_id = ? AND stock_symbol = ?", (user_id, stock_symbol))
+
         conn.commit()
     except Exception as e:
         print(f"Error deleting stock from portfolio: {e}")

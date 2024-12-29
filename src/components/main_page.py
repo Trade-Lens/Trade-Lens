@@ -135,11 +135,22 @@ def main_page():
                     options = dropdown_options,
                     key = "selected_stock"
                 )
-                delete_button = st.form_submit_button("Delete Stock", use_container_width=True)
+                shares_to_delete = st.number_input(
+                    label = "Number of Shares to Delete",
+                    min_value=1,
+                    step=1,
+                    key = "shares_to_delete"
+                )
+                delete_button = st.form_submit_button("Delete Shares", use_container_width=True)
 
             if delete_button:
-                delete_stock_from_portfolio(user_id, selected_stock)
-                st.rerun()
+                total_shares = float(list(row["Shares"])[0])
+
+                if shares_to_delete > 0 and shares_to_delete <= total_shares:
+                    delete_stock_from_portfolio(user_id, selected_stock, shares_to_delete)
+                    st.rerun()
+                else:
+                    st.warning("Please enter a valid number of shares to delete.")
             
             # afisam valoarea totala a portofoliului
             cont = st.container(border=True)
