@@ -23,6 +23,10 @@ def sidebar():
     if st.sidebar.button("Portofolio", use_container_width=True):
         st.session_state["page"] = "portofolio"
         st.rerun()
+    
+    if st.sidebar.button("Profile", use_container_width=True):
+        st.session_state["page"] = "profile"
+        st.rerun()
 
     # logout button
     if st.sidebar.button("Logout", use_container_width=True, type="primary"):

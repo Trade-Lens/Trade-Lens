@@ -13,6 +13,8 @@ from api.analyst_recommendation import get_analyst_recommendation
 from utils.portofolio import get_user_portofolio
 from auth.auth_service import get_user_id
 from utils.portofolio import delete_stock_from_portfolio
+from utils.profile import update_user_profile
+from components.styles.profile_pic_styles import profile_pic_styles
 
 def main_page():
     sidebar()
@@ -164,3 +166,40 @@ def main_page():
                     news_container.subheader(f"**{article['headline']}**")
                     news_container.write(article["summary"])
                     news_container.link_button("Read more", article["url"])
+    elif st.session_state.page == "profile":
+        st.title("Profile")
+        st.write("")
+
+        col1, col2 = st.columns(2)
+        
+        with col1:
+
+            username = st.session_state["logged_in_user"]
+            user_id = get_user_id(username)
+
+            st.subheader(f"**Username:** {username}")
+            st.subheader(f"**User ID:** {user_id}")
+
+            change_credentials = st.button("Change Credentials")
+            if change_credentials:
+                st.session_state["show_form"] = not st.session_state.get("show_form", False)
+
+            if st.session_state.get("show_form", False):
+                with st.form(key="update_profile"):
+                    new_username = st.text_input("New Username", type="default")
+                    new_password = st.text_input("New Password", type="password")
+                    update_button = st.form_submit_button("Update Profile")
+
+                if update_button:
+                    if new_username and new_password:
+                        # actualizam datele userului
+                        update_user_profile(user_id, new_username, new_password)
+                        st.success("Profile updated successfully!")
+                        st.session_state["logged_in_user"] = new_username
+                        st.rerun()
+                    else:
+                        st.warning("Please fill in both fields.")
+        with col2:
+            
+            st.markdown(profile_pic_styles(), unsafe_allow_html=True)
+            st.image("assets/landing_page_illustration.png", width=550)
