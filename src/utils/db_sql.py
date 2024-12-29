@@ -3,7 +3,7 @@ import sqlite3
 import os
 
 #  in development fiecare isi schimba path-ul catre baza de date
-DB_PATH = "/home/alin/Desktop/Trade-Lens/src/utils/trade_lens.db"
+DB_PATH = "utils/trade_lens.db"
 
 def get_connection():
     conn = sqlite3.connect(DB_PATH)
