@@ -20,7 +20,8 @@ def init_db():
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT UNIQUE NOT NULL,
-                hashed_password TEXT NOT NULL
+                hashed_password TEXT NOT NULL,
+                date_registered TEXT DEFAULT CURRENT_TIMESTAMP
             );
             """
         )

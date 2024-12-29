@@ -46,3 +46,14 @@ def get_user_id(username: str) -> Optional[int]:
         return row["id"] if row else None
     finally:
         conn.close()
+
+def get_registration_date(username: str) -> Optional[str]:
+    # returneaza data inregistrarii userului daca exista, altfel None
+    conn = get_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT date_registered FROM users WHERE username = ?", (username,))
+        row = cursor.fetchone()
+        return row["date_registered"] if row else None
+    finally:
+        conn.close()

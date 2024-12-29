@@ -12,6 +12,7 @@ from api.stock_insider_sentiment import get_insider_sentiment
 from api.analyst_recommendation import get_analyst_recommendation
 from utils.portofolio import get_user_portofolio
 from auth.auth_service import get_user_id
+from auth.auth_service import get_registration_date
 from utils.portofolio import delete_stock_from_portfolio
 from utils.profile import update_user_profile
 from components.styles.profile_pic_styles import profile_pic_styles
@@ -176,9 +177,11 @@ def main_page():
 
             username = st.session_state["logged_in_user"]
             user_id = get_user_id(username)
+            registeration_date = get_registration_date(username)
 
             st.subheader(f"**Username:** {username}")
             st.subheader(f"**User ID:** {user_id}")
+            st.subheader(f"**Investor since:** {registeration_date}")
 
             change_credentials = st.button("Change Credentials")
             if change_credentials:
