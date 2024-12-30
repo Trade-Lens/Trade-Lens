@@ -17,6 +17,7 @@ from utils.portofolio import delete_stock_from_portfolio
 from utils.profile import update_user_profile
 from components.styles.profile_pic_styles import profile_pic_styles
 from ml.predict_growth import predict_growth
+from utils.adjust_returns import adjust_returns_short, adjust_returns_long
 
 def main_page():
     sidebar()
@@ -91,21 +92,30 @@ def main_page():
                 # recomandare yfinance
                 yf_buy, yf_delta = get_recommendations(st.session_state["viewed_stock"])
 
-                # demo vizual(datele sunt random)
                 col3, col4= st.columns(2)
 
-                delta1 = round(predictions['180d'] - predictions['90d'], 2)
-                delta2 = round(predictions['365d'] - predictions['180d'], 2)
+                pred_90d = adjust_returns_short(st.session_state["viewed_stock"], predictions['90d'])
+                pred_180d = adjust_returns_long(st.session_state["viewed_stock"], predictions['180d'])
+                pred_365d = adjust_returns_long(st.session_state["viewed_stock"], predictions['365d'])
+
+                delta1 = round(pred_180d - pred_90d, 2)
+                delta2 = round(pred_365d - pred_180d, 2)
 
                 with col3:
-                    st.metric(label="90 days", value=f"{predictions['90d']:.2f}%", delta=f"{predictions['90d']:.2f}%", border=True)
-                    st.metric(label="365 days", value=f"{predictions['365d']:.2f}%", delta=f"{delta2}%", border=True)
+                    st.metric(label="90 days", value=f"{pred_90d:.2f}%", delta=f"{pred_90d:.2f}%", border=True)
+                    st.metric(label="365 days", value=f"{pred_365d:.2f}%", delta=f"{delta2}%", border=True)
 
                 with col4:
-                    st.metric(label="180 days", value=f"{predictions['180d']:.2f}%", delta=f"{delta1}%", border=True)
+                    st.metric(label="180 days", value=f"{pred_180d:.2f}%", delta=f"{delta1}%", border=True)
                     st.metric(label="YFINANCE RECOMMENDATION", value=yf_buy, delta=yf_delta, border=True)
 
-                st.error("These predictions can be misleading sometimes and should not be considered financial advice.")
+                disclaimer = st.container(border=True)
+                with disclaimer:
+                    st.markdown(
+                        "<span style='color: #ff4b4b;'>These predictions can be misleading sometimes and should not be considered financial advice.</span>"
+                        "</div>",
+                        unsafe_allow_html=True
+                    )
 
     elif st.session_state.page == "portofolio":
         st.title("My Portfolio")
