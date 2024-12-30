@@ -33,6 +33,7 @@ docker-compose==1.29.2
 dockerpty==0.4.1
 docopt==0.6.2
 duplicity==0.8.21
+et_xmlfile==2.0.0
 fasteners==0.14.1
 finnhub-python==2.4.22
 Flask==2.1.2
@@ -84,6 +85,7 @@ numpy==1.25.0
 oauthlib==3.2.0
 olefile==0.46
 opencv-python==4.7.0.72
+openpyxl==3.1.5
 packaging==21.3
 pandas==2.0.3
 paramiko==2.9.3

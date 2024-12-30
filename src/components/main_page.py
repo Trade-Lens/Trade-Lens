@@ -184,7 +184,18 @@ def main_page():
             # afisam valoarea totala a portofoliului
             cont = st.container(border=True)
             cont.write("Total Portfolio Value: " + str(user_portfolio_df["Total Value"].sum().round(2)) + " $")
-        
+
+            export_df = user_portfolio_df.copy()
+            shares_list = []
+            for shares in user_portfolio_df["Shares"]:
+                if isinstance(shares, (list, set)):
+                    shares_list.append(list(shares)[0])
+                else:
+                    shares_list.append(shares)
+            export_df["Shares"] = shares_list
+            
+            cont.download_button("Export Portfolio", export_df.to_csv(), "portfolio.csv", "text/csv", use_container_width=True)
+
     elif st.session_state.page == "market_news":
         st.title("Market News")
         st.write("")
