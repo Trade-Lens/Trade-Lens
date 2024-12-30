@@ -16,6 +16,7 @@ from auth.auth_service import get_registration_date
 from utils.portofolio import delete_stock_from_portfolio
 from utils.profile import update_user_profile
 from components.styles.profile_pic_styles import profile_pic_styles
+from ml.predict_growth import predict_growth
 
 def main_page():
     sidebar()
@@ -78,7 +79,14 @@ def main_page():
                 st.write("Using our machine learning algorithms we can estimate a growth prediction based on financial strength, market sentiment, historical data, insider sentiment and other factors.")
                 st.write("")
 
-                # de implementat algoritmul de predictie cu ml 
+                # algoritmul de predictie cu ml
+                stock_data = yf.Ticker(st.session_state["viewed_stock"]).history(period="1y")
+
+                # inlocuim valorile nan cu 0 (fara sa facem asta da crash aplicatia)
+                stock_data = stock_data.fillna(0)
+                stock_data = stock_data.replace('N/A', 0)
+
+                predictions = predict_growth(stock_data)
 
                 # recomandare yfinance
                 yf_buy, yf_delta = get_recommendations(st.session_state["viewed_stock"])
@@ -86,12 +94,15 @@ def main_page():
                 # demo vizual(datele sunt random)
                 col3, col4= st.columns(2)
 
+                delta1 = round(predictions['180d'] - predictions['90d'], 2)
+                delta2 = round(predictions['365d'] - predictions['180d'], 2)
+
                 with col3:
-                    st.metric(label="90 days", value="+5%", delta="2%", border=True)
-                    st.metric(label="365 days", value="+15%", delta="4%", border=True)
+                    st.metric(label="90 days", value=f"{predictions['90d']:.2f}%", delta=f"{predictions['90d']:.2f}%", border=True)
+                    st.metric(label="365 days", value=f"{predictions['365d']:.2f}%", delta=f"{delta2}%", border=True)
 
                 with col4:
-                    st.metric(label="180 days", value="+10%", delta="3%", border=True)
+                    st.metric(label="180 days", value=f"{predictions['180d']:.2f}%", delta=f"{delta1}%", border=True)
                     st.metric(label="YFINANCE RECOMMENDATION", value=yf_buy, delta=yf_delta, border=True)
 
                 st.error("These predictions can be misleading sometimes and should not be considered financial advice.")

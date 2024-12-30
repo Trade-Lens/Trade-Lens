@@ -37,11 +37,4 @@ def sidebar():
         st.session_state["added_shares"] = None
         st.session_state["added_stock_info"] = None
 
-        table_data = pd.DataFrame({
-                    "Stock Symbol": [],
-                    "Shares": [],
-                    "Price": [],
-                    "Total Value": []
-        })
-        st.session_state["portfolio_data"] = table_data
         st.rerun()
