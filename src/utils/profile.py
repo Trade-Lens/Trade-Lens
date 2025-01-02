@@ -6,7 +6,7 @@ from auth.models import UserModel
 # actualizam datele userului in baza de date
 def update_user_profile(user_id, new_username, new_password):
 
-    DB_PATH = "/home/alin/Desktop/Trade-Lens/src/utils/trade_lens.db"
+    DB_PATH = "utils/trade_lens.db"
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     new_password = UserModel.hash_password(new_password)

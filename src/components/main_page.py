@@ -17,7 +17,7 @@ from utils.portofolio import delete_stock_from_portfolio
 from utils.profile import update_user_profile
 from components.styles.profile_pic_styles import profile_pic_styles
 from ml.predict_growth import predict_growth
-from utils.adjust_returns import adjust_returns_short, adjust_returns_long
+from utils.adjust_returns import adjust_returns_short
 
 def main_page():
     sidebar()
@@ -95,8 +95,8 @@ def main_page():
                 col3, col4= st.columns(2)
 
                 pred_90d = adjust_returns_short(st.session_state["viewed_stock"], predictions['90d'])
-                pred_180d = adjust_returns_long(st.session_state["viewed_stock"], predictions['180d'])
-                pred_365d = adjust_returns_long(st.session_state["viewed_stock"], predictions['365d'])
+                pred_180d = predictions['180d']
+                pred_365d = predictions['365d']
 
                 delta1 = round(pred_180d - pred_90d, 2)
                 delta2 = round(pred_365d - pred_180d, 2)
