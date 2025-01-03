@@ -158,13 +158,13 @@ def main_page():
                 )
                 shares_to_delete = st.number_input(
                     label = "Number of Shares to Delete",
-                    min_value=1,
-                    step=1,
+                    min_value=0.0,
+                    step=0.1,
                     key = "shares_to_delete"
                 )
                 
                 delete_button = st.form_submit_button("Delete", use_container_width=True)
-                delete_all_button = st.form_submit_button("Delete All Shares of " + selected_stock, use_container_width=True)
+                delete_all_button = st.form_submit_button("Delete All Shares", use_container_width=True)
 
             if delete_button:
                 total_shares = float(list(row["Shares"])[0])
@@ -218,6 +218,7 @@ def main_page():
                     news_container.subheader(f"**{article['headline']}**")
                     news_container.write(article["summary"])
                     news_container.link_button("Read more", article["url"])
+
     elif st.session_state.page == "profile":
         st.title("Profile")
         st.write("")
@@ -247,10 +248,10 @@ def main_page():
                 if update_button:
                     if new_username and new_password:
                         # actualizam datele userului
-                        update_user_profile(user_id, new_username, new_password)
-                        st.success("Profile updated successfully!")
-                        st.session_state["logged_in_user"] = new_username
-                        st.rerun()
+                        ok = update_user_profile(user_id, new_username, new_password)
+                        if ok:
+                            st.session_state["logged_in_user"] = new_username
+                            st.rerun()
                     else:
                         st.warning("Please fill in both fields.")
         with col2:

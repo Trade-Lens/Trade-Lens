@@ -20,7 +20,7 @@ def sidebar():
         st.session_state["page"] = "market_news"
         st.rerun()
 
-    if st.sidebar.button("Portofolio", use_container_width=True):
+    if st.sidebar.button("Portfolio", use_container_width=True):
         st.session_state["page"] = "portofolio"
         st.rerun()
     
